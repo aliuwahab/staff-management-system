@@ -33,6 +33,25 @@ class StaffTest extends TestCase
         $response->assertStatus(200);
     }
 
+    /** @test */
+    public function an_unauthenticated_admin_cannot_visit_create_staff_page()
+    {
+        $this->factoryWithoutObservers(User::class)->create(['is_admin' => true]);
+        $this->expectException('Illuminate\Auth\AuthenticationException');
+        $this->get('/staff/create');
+    }
+
+    /** @test */
+    public function a_user_who_is_not_an_admin_cannot_visit_create_staff_page()
+    {
+        $user = $this->factoryWithoutObservers(User::class)->create(['is_admin' => false]);
+        $user = $this->actingAs($user);
+        $response = $user->get('/staff/create');
+        $response->assertStatus(302);
+        $response->assertRedirect(route('home'));
+    }
+    
+
 
     /** @test */
     public function an_authenticated_admin_can_create_a_staff()

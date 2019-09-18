@@ -25,9 +25,9 @@ Route::get('/', function () {
 Route::middleware(['auth'])->group(function () {
 
     Route::get('/home', 'HomeController@index')->name('home');
-    Route::get('/users', 'AdminController@index')->name('all-admins');
 
     Route::middleware(['user.type'])->group(function () {
+        Route::get('/users', 'AdminController@index')->name('all-admins');
         Route::get('/staff', 'StaffController@index')->name('all-staff-members');
         Route::get('/staff/create', 'StaffController@create')->name('new-staff');
         Route::post('/staff', ['uses' => 'StaffController@store', 'as' => 'add-new-staff']);
